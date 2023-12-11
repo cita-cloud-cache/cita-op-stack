@@ -167,7 +167,7 @@ func (tc *ReceiptsTestCase) Run(t *testing.T) {
 	defer ethCl.Close()
 
 	for i, req := range requests {
-		info, result, err := ethCl.FetchReceipts(context.Background(), block.Hash)
+		info, result, err := ethCl.FetchReceipts(context.Background(), uint64(block.Number))
 		if err == nil {
 			require.Nil(t, req.err, "error")
 			require.Equal(t, block.Hash, info.Hash(), fmt.Sprintf("req %d blockhash", i))

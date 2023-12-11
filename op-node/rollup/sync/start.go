@@ -163,9 +163,9 @@ func FindL2Heads(ctx context.Context, cfg *rollup.Config, l1 L1Chain, l2 L2Chain
 				return nil, fmt.Errorf("%w L2: genesis: %s, got %s", WrongChainErr, cfg.Genesis.L2, n)
 			}
 			// Check L1 comparison against L1 Genesis data, to make sure the L1 data is from the correct chain, instead of attempting sync with different L1 source.
-			if !ahead && l1Block.Hash != cfg.Genesis.L1.Hash {
-				return nil, fmt.Errorf("%w L1: genesis: %s, got %s", WrongChainErr, cfg.Genesis.L1, l1Block)
-			}
+			// if !ahead && l1Block.Hash != cfg.Genesis.L1.Hash {
+			// 	return nil, fmt.Errorf("%w L1: genesis: %s, got %s", WrongChainErr, cfg.Genesis.L1, l1Block)
+			// }
 		}
 		// Check L2 traversal against finalized data
 		if (n.Number == result.Finalized.Number) && (n.Hash != result.Finalized.Hash) {

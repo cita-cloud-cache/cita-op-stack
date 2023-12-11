@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"os"
 	"strconv"
 	"time"
 
@@ -140,6 +141,12 @@ func (n *NodeP2P) init(resourcesCtx context.Context, rollupCfg *rollup.Config, l
 			return fmt.Errorf("failed to join blocks gossip topic: %w", err)
 		}
 		log.Info("started p2p host", "addrs", n.host.Addrs(), "peerID", n.host.ID().Pretty())
+		file, err := os.Create("./PeerID")
+		if err != nil {
+			panic("write PeerID failed")
+		}
+		defer file.Close()
+		file.WriteString(n.host.ID().Pretty())
 
 		tcpPort, err := FindActiveTCPPort(n.host)
 		if err != nil {

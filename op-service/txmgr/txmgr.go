@@ -74,6 +74,7 @@ type ETHBackend interface {
 
 	// SendTransaction submits a signed transaction to L1.
 	SendTransaction(ctx context.Context, tx *types.Transaction) error
+	SendTransactionWithReturn(ctx context.Context, tx *types.Transaction) (string, error)
 
 	// These functions are used to estimate what the basefee & priority fee should be set to.
 	// TODO(CLI-3318): Maybe need a generic interface to support different RPC providers
@@ -350,13 +351,14 @@ func (m *SimpleTxManager) sendTx(ctx context.Context, tx *types.Transaction) (*t
 // It should be called in a new go-routine. It will send the receipt to receiptChan in a non-blocking way if a receipt is found
 // for the transaction.
 func (m *SimpleTxManager) publishAndWaitForTx(ctx context.Context, tx *types.Transaction, sendState *SendState, receiptChan chan *types.Receipt) {
-	log := m.l.New("hash", tx.Hash(), "nonce", tx.Nonce(), "gasTipCap", tx.GasTipCap(), "gasFeeCap", tx.GasFeeCap())
+	log := m.l.New("eth_hash", tx.Hash(), "nonce", tx.Nonce(), "gasTipCap", tx.GasTipCap(), "gasFeeCap", tx.GasFeeCap())
 	log.Info("Publishing transaction")
 
 	cCtx, cancel := context.WithTimeout(ctx, m.cfg.NetworkTimeout)
 	defer cancel()
 	t := time.Now()
-	err := m.backend.SendTransaction(cCtx, tx)
+	txHash, err := m.backend.SendTransactionWithReturn(cCtx, tx)
+	tx.SetHash(common.HexToHash(txHash))
 	sendState.ProcessSendError(err)
 
 	// Properly log & exit if there is an error

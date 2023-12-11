@@ -273,13 +273,13 @@ func BuildBlocksValidator(log log.Logger, cfg *rollup.Config, runCfg GossipRunti
 		*res = data // if we ended up growing the slice capacity, fine, keep the larger one.
 
 		// message starts with compact-encoding secp256k1 encoded signature
-		signatureBytes, payloadBytes := data[:65], data[65:]
+		_, payloadBytes := data[:65], data[65:]
 
 		// [REJECT] if the signature by the sequencer is not valid
-		result := verifyBlockSignature(log, cfg, runCfg, id, signatureBytes, payloadBytes)
-		if result != pubsub.ValidationAccept {
-			return result
-		}
+		// result := verifyBlockSignature(log, cfg, runCfg, id, signatureBytes, payloadBytes)
+		// if result != pubsub.ValidationAccept {
+		// 	return result
+		// }
 
 		// [REJECT] if the block encoding is not valid
 		var payload eth.ExecutionPayload

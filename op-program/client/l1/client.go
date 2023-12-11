@@ -72,8 +72,8 @@ func (o *OracleL1Client) InfoByHash(ctx context.Context, hash common.Hash) (eth.
 	return o.oracle.HeaderByBlockHash(hash), nil
 }
 
-func (o *OracleL1Client) FetchReceipts(ctx context.Context, blockHash common.Hash) (eth.BlockInfo, types.Receipts, error) {
-	info, rcpts := o.oracle.ReceiptsByBlockHash(blockHash)
+func (o *OracleL1Client) FetchReceipts(ctx context.Context, number uint64) (eth.BlockInfo, types.Receipts, error) {
+	info, rcpts := o.oracle.ReceiptsByBlockHash(number)
 	return info, rcpts, nil
 }
 

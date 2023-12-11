@@ -96,8 +96,8 @@ func (m *MockEthClient) ExpectPayloadByLabel(label eth.BlockLabel, payload *eth.
 	m.Mock.On("PayloadByLabel", label).Once().Return(payload, &err)
 }
 
-func (m *MockEthClient) FetchReceipts(ctx context.Context, blockHash common.Hash) (eth.BlockInfo, types.Receipts, error) {
-	out := m.Mock.MethodCalled("FetchReceipts", blockHash)
+func (m *MockEthClient) FetchReceipts(ctx context.Context, number uint64) (eth.BlockInfo, types.Receipts, error) {
+	out := m.Mock.MethodCalled("FetchReceipts", number)
 	return *out[0].(*eth.BlockInfo), out[1].(types.Receipts), *out[2].(*error)
 }
 

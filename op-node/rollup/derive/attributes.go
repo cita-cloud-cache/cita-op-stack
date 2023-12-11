@@ -16,7 +16,7 @@ import (
 // L1ReceiptsFetcher fetches L1 header info and receipts for the payload attributes derivation (the info tx and deposits)
 type L1ReceiptsFetcher interface {
 	InfoByHash(ctx context.Context, hash common.Hash) (eth.BlockInfo, error)
-	FetchReceipts(ctx context.Context, blockHash common.Hash) (eth.BlockInfo, types.Receipts, error)
+	FetchReceipts(ctx context.Context, number uint64) (eth.BlockInfo, types.Receipts, error)
 }
 
 type SystemConfigL2Fetcher interface {
@@ -57,7 +57,7 @@ func (ba *FetchingAttributesBuilder) PreparePayloadAttributes(ctx context.Contex
 	// case we need to fetch all transaction receipts from the L1 origin block so we can scan for
 	// user deposits.
 	if l2Parent.L1Origin.Number != epoch.Number {
-		info, receipts, err := ba.l1.FetchReceipts(ctx, epoch.Hash)
+		info, receipts, err := ba.l1.FetchReceipts(ctx, epoch.Number)
 		if err != nil {
 			return nil, NewTemporaryError(fmt.Errorf("failed to fetch L1 block info and receipts: %w", err))
 		}

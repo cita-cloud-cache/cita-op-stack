@@ -163,6 +163,7 @@ var Subcommands = cli.Commands{
 				return err
 			}
 
+			l1StartBlock.SetHash(*config.L1StartingBlockTag.BlockHash);
 			log.Info("Using L1 Start Block", "number", l1StartBlock.Number(), "hash", l1StartBlock.Hash().Hex())
 
 			// Build the L2 genesis block

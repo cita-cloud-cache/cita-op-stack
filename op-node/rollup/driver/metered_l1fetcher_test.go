@@ -88,7 +88,7 @@ func TestDurationRecorded(t *testing.T) {
 				}
 				inner.ExpectFetchReceipts(hash, info, rcpts, expectedErr)
 
-				actualInfo, actualRcpts, err := fetcher.FetchReceipts(context.Background(), hash)
+				actualInfo, actualRcpts, err := fetcher.FetchReceipts(context.Background(), num)
 				require.Equal(t, info, actualInfo)
 				require.Equal(t, rcpts, actualRcpts)
 				require.Equal(t, expectedErr, err)

@@ -7,7 +7,6 @@ import (
 	"io"
 
 	"github.com/ethereum/go-ethereum"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 
@@ -19,7 +18,7 @@ import (
 
 type L1BlockRefByNumberFetcher interface {
 	L1BlockRefByNumber(context.Context, uint64) (eth.L1BlockRef, error)
-	FetchReceipts(ctx context.Context, blockHash common.Hash) (eth.BlockInfo, types.Receipts, error)
+	FetchReceipts(ctx context.Context, number uint64) (eth.BlockInfo, types.Receipts, error)
 }
 
 type L1Traversal struct {
@@ -66,12 +65,12 @@ func (l1t *L1Traversal) AdvanceL1Block(ctx context.Context) error {
 	} else if err != nil {
 		return NewTemporaryError(fmt.Errorf("failed to find L1 block info by number, at origin %s next %d: %w", origin, origin.Number+1, err))
 	}
-	if l1t.block.Hash != nextL1Origin.ParentHash {
-		return NewResetError(fmt.Errorf("detected L1 reorg from %s to %s with conflicting parent %s", l1t.block, nextL1Origin, nextL1Origin.ParentID()))
-	}
+	// if l1t.block.Hash != nextL1Origin.ParentHash {
+	// 	return NewResetError(fmt.Errorf("detected L1 reorg from %s to %s with conflicting parent %s", l1t.block, nextL1Origin, nextL1Origin.ParentID()))
+	// }
 
 	// Parse L1 receipts of the given block and update the L1 system configuration
-	_, receipts, err := l1t.l1Blocks.FetchReceipts(ctx, nextL1Origin.Hash)
+	_, receipts, err := l1t.l1Blocks.FetchReceipts(ctx, nextL1Origin.Number)
 	if err != nil {
 		return NewTemporaryError(fmt.Errorf("failed to fetch receipts of L1 block %s for L1 sysCfg update: %w", origin, err))
 	}

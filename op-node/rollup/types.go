@@ -149,13 +149,13 @@ func (cfg *Config) CheckL1ChainID(ctx context.Context, client L1Client) error {
 
 // CheckL1GenesisBlockHash checks that the configured L1 genesis block hash is valid for the given client.
 func (cfg *Config) CheckL1GenesisBlockHash(ctx context.Context, client L1Client) error {
-	l1GenesisBlockRef, err := client.L1BlockRefByNumber(ctx, cfg.Genesis.L1.Number)
-	if err != nil {
-		return fmt.Errorf("failed to get L1 genesis blockhash: %w", err)
-	}
-	if l1GenesisBlockRef.Hash != cfg.Genesis.L1.Hash {
-		return fmt.Errorf("incorrect L1 genesis block hash %s, expected %s", l1GenesisBlockRef.Hash, cfg.Genesis.L1.Hash)
-	}
+	// l1GenesisBlockRef, err := client.L1BlockRefByNumber(ctx, cfg.Genesis.L1.Number)
+	// if err != nil {
+	// 	return fmt.Errorf("failed to get L1 genesis blockhash: %w", err)
+	// }
+	// if l1GenesisBlockRef.Hash != cfg.Genesis.L1.Hash {
+	// 	return fmt.Errorf("incorrect L1 genesis block hash %s, expected %s", l1GenesisBlockRef.Hash, cfg.Genesis.L1.Hash)
+	// }
 	return nil
 }
 
